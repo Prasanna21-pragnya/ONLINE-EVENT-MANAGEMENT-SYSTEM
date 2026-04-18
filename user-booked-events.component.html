@@ -1,0 +1,108 @@
+<button routerLink="/logout" class="btn btn-primary">Logout</button>
+<br><br>
+
+<a routerLink="/user_account_profile" class="btn btn-primary">Edit Profile</a>
+<br><br>
+
+<button class="btn btn-secondary" routerLink="/user_account_show_events">
+  Show All Events
+</button>
+
+<br><br><br>
+
+<section class="wrapper">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let booking of bookingList">
+
+        <div class="card shadow-lg p-3">
+
+          <div class="card-body">
+
+            <h3>{{booking.event.name}}</h3>
+            <p>{{booking.event.description}}</p>
+
+            <p><b>Organizer:</b> {{booking.event.user.name}}</p>
+            <p><b>Date:</b> {{booking.event.date}}</p>
+            <p><b>Time:</b> {{booking.event.time}}</p>
+            <p><b>Venue:</b> {{booking.event.venue}}</p>
+
+            <h4>₹ {{booking.event.price}}</h4>
+
+            <hr>
+
+            <!-- Booking Status -->
+            <p>
+              <b>Status:</b>
+              <span class="badge bg-info">
+                {{booking.status}}
+              </span>
+            </p>
+
+            <!-- Payment Status -->
+            <p>
+              <b>Payment:</b>
+              <span 
+                class="badge"
+                [ngClass]="{
+                  'bg-warning': booking.paymentStatus=='NOT_PAID',
+                  'bg-success': booking.paymentStatus=='PAID'
+                }">
+                {{booking.paymentStatus}}
+              </span>
+            </p>
+
+            <br>
+
+            <!-- 💰 PAY BUTTON -->
+            <button 
+  *ngIf="booking.status=='APPROVED' && booking.paymentStatus=='NOT_PAID'"
+  class="btn btn-success"
+  (click)="payNow(booking.bookingId)">
+  Pay Now
+</button>
+
+            <!-- ❌ CANCEL -->
+            <button 
+              class="btn btn-danger ms-2"
+              (click)="cancelBooking(booking.bookingId)">
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 💳 PAYMENT POPUP -->
+<div *ngIf="showPayment" class="payment-popup">
+
+  <div class="popup-card">
+    <h3>Select Payment Method</h3>
+
+    <button class="btn btn-primary m-2" (click)="confirmPayment('Google Pay')">
+      Google Pay
+    </button>
+
+    <button class="btn btn-success m-2" (click)="confirmPayment('PhonePe')">
+      PhonePe
+    </button>
+
+    <button class="btn btn-warning m-2" (click)="confirmPayment('UPI')">
+      UPI
+    </button>
+
+    <br><br>
+
+    <button class="btn btn-danger" (click)="showPayment=false">
+      Cancel
+    </button>
+  </div>
+
+</div>
